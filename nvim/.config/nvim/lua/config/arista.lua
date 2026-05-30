@@ -1,0 +1,35 @@
+-- run on container
+-- a ws yum install ArTacLSP
+-- vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+--    pattern = { '*.tac' },
+--    callback = function()
+--       vim.lsp.start({
+-- 	   name = 'tacc',
+-- 	   cmd = { '/usr/bin/artaclsp' },
+-- 	   cmd_args = { '-I', '/bld/' },
+-- 	   root_dir = '/src',
+-- 	})
+--    end
+-- })
+
+-- GPT gen code
+-- local capabilities = require("cmp_nvim_lsp").default_capabilities()
+-- local on_attach = function(client, bufnr)
+--   -- Your usual keymaps here
+--   local opts = { noremap = true, silent = true, buffer = bufnr }
+--   vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+--   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+-- end
+--
+-- vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+--   pattern = { '*.tac' },
+--   callback = function(ev)
+--     vim.lsp.start({
+--       name = "tacc",
+--       cmd = { "/usr/bin/artaclsp", "-I", "/bld/" },
+--       root_dir = vim.fs.dirname(vim.fs.find({ ".git", "src" }, { upward = true })[1]) or "/src",
+--       capabilities = capabilities,
+--       on_attach = on_attach,
+--     })
+--   end,
+-- })
