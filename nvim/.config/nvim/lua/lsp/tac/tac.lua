@@ -1,10 +1,15 @@
 -- run on container
 -- a ws yum install ArTacLSP
 
-local function is_parser_installed(parser)
-  local ok, parsers = pcall(require, 'nvim-treesitter.parsers')
-  if not ok then return false end
-  return parsers.has_parser(parser)
+
+local function ensure_parser(parser)
+  local ok = pcall(vim.treesitter.language.add, parser)
+
+  if ok then
+    return
+  end
+
+  require("nvim-treesitter").install { parser }
 end
 
 local capabilities = nil
@@ -28,11 +33,6 @@ vim.lsp.config['artaclsp'] = {
   end,
 }
 
-local parser = 'cpp'
-if parser and not is_parser_installed(parser) then
-  vim.schedule(function()
-    vim.cmd("TSInstall " .. parser)
-  end)
-end
+ensure_parser('cpp')
 
 vim.lsp.enable('artaclsp')
