@@ -25,16 +25,14 @@ hl.device({ name = "epic-mouse-v1", sensitivity = -0.5 })
 -- General utility
 hl.bind(MainMod .. " + RETURN", hl.dsp.exec_cmd(Terminal))
 hl.bind(MainMod .. " + Q", hl.dsp.window.close('activewindow'))
-hl.bind(MainMod .. " + M",
-  hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"))
+hl.bind(MainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(MainMod .. " + E", hl.dsp.exec_cmd(Filemanager))
 hl.bind(MainMod .. " + V", hl.dsp.window.float({ action = 'toggle', window = 'activewindow' }))
 hl.bind(MainMod .. " + F", hl.dsp.window.fullscreen({ mode = 'maximized', action = 'toggle', window = 'activewindow' }))
-hl.bind(MainMod .. " + R", hl.dsp.exec_cmd(Menu))
 hl.bind(MainMod .. " + P", hl.dsp.window.pseudo({ action = 'toggle', window = 'activewindow' }))
-hl.bind(MainMod .. " + CTRL + P", hl.dsp.window.pin({ window = 'activewindow' }))
+hl.bind(MainMod .. " + CTRL + P", hl.dsp.window.pin({ wkndow = 'activewindow' }))
 hl.bind(MainMod .. " + T", hl.dsp.layout('togglesplit'))
-hl.bind(MainMod .. " + SPACE", hl.dsp.exec_cmd("pkill wofi || wofi --show drun"))
+hl.bind(MainMod .. " + SPACE", hl.dsp.exec_cmd("pkill " .. Launcher .. " || " .. Launcher ))
 
 -- # Move focus with MainMod + vim controls
 hl.bind(MainMod .. " + H", hl.dsp.focus({ direction = 'l' }))
@@ -92,3 +90,7 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 -- # Screenshot
 hl.bind(MainMod .. " + SHIFT + P", hl.dsp.exec_cmd('grim -g "$(slurp -w 0)" ~/Pictures/shot-$date( +%s).png'))
 hl.bind(MainMod .. " + CTRL + SHIFT + P", hl.dsp.exec_cmd('grim -g "$(slurp -w 0)" - | wl-copy'))
+
+
+-- Requires https://github.com/Shanu-Kumawat/quickshell-overview 
+hl.bind(MainMod .. " + TAB", hl.dsp.exec_cmd('qs ipc -c overview call overview toggle'))

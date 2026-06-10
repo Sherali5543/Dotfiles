@@ -1,4 +1,4 @@
 Terminal = "kitty"
 Filemanager = "dolphin"
-Menu = "wofi"
+Launcher = "hyprlauncher"
 MainMod = "SUPER"
