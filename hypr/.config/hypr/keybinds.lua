@@ -32,7 +32,7 @@ hl.bind(MainMod .. " + F", hl.dsp.window.fullscreen({ mode = 'maximized', action
 hl.bind(MainMod .. " + P", hl.dsp.window.pseudo({ action = 'toggle', window = 'activewindow' }))
 hl.bind(MainMod .. " + CTRL + P", hl.dsp.window.pin({ wkndow = 'activewindow' }))
 hl.bind(MainMod .. " + T", hl.dsp.layout('togglesplit'))
-hl.bind(MainMod .. " + SPACE", hl.dsp.exec_cmd("pkill " .. Launcher .. " || " .. Launcher ))
+hl.bind(MainMod .. " + SPACE", hl.dsp.exec_cmd("pkill " .. Launcher .. " || " .. Launcher .. " --show drun" ))
 
 -- # Move focus with MainMod + vim controls
 hl.bind(MainMod .. " + H", hl.dsp.focus({ direction = 'l' }))
