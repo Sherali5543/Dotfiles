@@ -1,4 +1,4 @@
-vim.lsp.config.neocmake = {
+return {
   cmd = { "neocmakelsp", "stdio" },
   filetypes = { "cmake" },
   root_markers = { "CMakeLists.txt", ".git", "build", "cmake" },
@@ -9,5 +9,3 @@ vim.lsp.config.neocmake = {
     semantic_token = false,
   },
 }
-
-vim.lsp.enable('neocmake')

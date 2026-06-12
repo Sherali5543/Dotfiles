@@ -1,4 +1,3 @@
-vim.lsp.config.qmlls = {
+return {
   cmd = {"qmlls", "-E"}
 }
-vim.lsp.enable("qmlls")

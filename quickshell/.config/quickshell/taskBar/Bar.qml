@@ -64,7 +64,16 @@ Scope {
             anchors.fill: parent
             color: "#555555"
 
+            Brightness{
+              id: brightness
+              anchors.right: sound.left 
+              anchors.verticalCenter: parent.verticalCenter
+              // anchors.rightMargin: 10
+              // anchors.margins: 5
+            }
+
             Sound{
+              id: sound
               anchors.right: battery.left
               anchors.verticalCenter: parent.verticalCenter
               anchors.rightMargin: 10
