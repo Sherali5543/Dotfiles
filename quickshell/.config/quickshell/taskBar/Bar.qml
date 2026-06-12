@@ -68,8 +68,7 @@ Scope {
               id: brightness
               anchors.right: sound.left 
               anchors.verticalCenter: parent.verticalCenter
-              // anchors.rightMargin: 10
-              // anchors.margins: 5
+              anchors.margins: 5
             }
 
             Sound{
