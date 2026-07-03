@@ -88,7 +88,7 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tru
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
 -- # Screenshot
-hl.bind(MainMod .. " + SHIFT + P", hl.dsp.exec_cmd('grim -g "$(slurp -w 0)" ~/Pictures/shot-$date( +%s).png'))
+hl.bind(MainMod .. " + SHIFT + P", hl.dsp.exec_cmd('grim -g "$(slurp -w 0)" ~/Pictures/shot-$(date +%s).png'))
 hl.bind(MainMod .. " + CTRL + SHIFT + P", hl.dsp.exec_cmd('grim -g "$(slurp -w 0)" - | wl-copy'))
 
 

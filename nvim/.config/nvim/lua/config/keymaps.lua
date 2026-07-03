@@ -1,6 +1,7 @@
-local utils = require("config.keymap-utils")
+-- local utils = require("config.keymap-utils")
 
-utils.mapn('<leader>fm', vim.lsp.buf.format, { desc = 'Format buffer' })
+-- In conform
+-- utils.mapn('<leader>fm', vim.lsp.buf.format, { desc = 'Format buffer' })
 
 -- Tab controls
 

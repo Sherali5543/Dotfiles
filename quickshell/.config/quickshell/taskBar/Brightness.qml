@@ -1,6 +1,7 @@
 import QtQuick
-import QtQuick.Effects
+import QtQuick.Controls.impl
 import Quickshell.Io
+import qs.utils
 
 Item {
   id: root
@@ -47,7 +48,7 @@ Item {
       root.max_brightness = parseInt(text())}
   }
 
-  Image {
+  IconImage {
     id: icon
     source: {
       console.log("BRIGHTNESS MATH: ")
@@ -63,13 +64,8 @@ Item {
         return "../assets/brightness-high.svg";
       }
     }
-    visible: false
+
+    color: ColorPalette.imageColor
   }
 
-  MultiEffect {
-    anchors.fill: icon
-    source: icon
-    colorization: 1.0
-    colorizationColor: '#000000'
-  }
 }

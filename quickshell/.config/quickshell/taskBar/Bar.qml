@@ -1,19 +1,21 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import qs.utils
 
 Scope {
   Variants {
-    model: Quickshell.screens 
+    model: Quickshell.screens
 
     PanelWindow {
+      id: bar
       required property var modelData
       screen: modelData
       color: "transparent"
 
       anchors {
-        top: true 
-        left: true 
+        top: true
+        left: true
         right: true
       }
 
@@ -30,11 +32,12 @@ Scope {
           Layout.alignment: Qt.AlignLeft
 
           Rectangle {
-            anchors.fill: parent 
-            color: "#555555"
+            anchors.fill: parent
 
-            Workspace{
-              id: workspace 
+            color: ColorPalette.backgroundColor
+
+            Workspace {
+              id: workspace
               anchors.left: parent.left
               anchors.verticalCenter: parent.verticalCenter
               anchors.margins: 10
@@ -42,19 +45,19 @@ Scope {
           }
         }
 
-        // Center 
+        // Center
         Item {
           Layout.preferredWidth: 200
           Layout.fillHeight: true
           Layout.alignment: Qt.AlignCenter
 
           Rectangle {
-            anchors.fill: parent 
-            color: "#555555"
+            anchors.fill: parent
+            color: ColorPalette.backgroundColor
           }
         }
 
-        // Right 
+        // Right
         Item {
           Layout.preferredWidth: 200
           Layout.fillHeight: true
@@ -62,36 +65,19 @@ Scope {
 
           Rectangle {
             anchors.fill: parent
-            color: "#555555"
+            color: ColorPalette.backgroundColor
 
-            Brightness{
-              id: brightness
-              anchors.right: sound.left 
-              anchors.verticalCenter: parent.verticalCenter
-              anchors.margins: 5
-            }
-
-            Sound{
-              id: sound
-              anchors.right: battery.left
-              anchors.verticalCenter: parent.verticalCenter
+            RowLayout {
+              // Fill the entire container instead of anchoring to just the right edge
+              anchors.fill: parent
               anchors.rightMargin: 10
-              anchors.margins: 5
-            }
-
-            Battery{
-              id: battery
-              anchors.right: clock.left
-              anchors.verticalCenter: parent.verticalCenter
-              anchors.rightMargin: 10
-              anchors.margins: 5
-            }
-
-            ClockWidget{
-              id: clock
-              anchors.right: parent.right
-              anchors.verticalCenter: parent.verticalCenter
-              anchors.margins: 5
+              anchors.leftMargin: 10
+              spacing: 4
+              SystemTrayWidget {}
+              Brightness {}
+              Sound {}
+              Battery {}
+              ClockWidget {}
             }
           }
         }

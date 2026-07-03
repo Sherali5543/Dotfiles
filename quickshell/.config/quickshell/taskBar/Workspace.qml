@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell.Hyprland
+import qs.utils
 
 Item{
 // size this Item to its contents
@@ -12,6 +13,8 @@ Item{
         ? Hyprland.focusedWorkspace.name
         : "(no focused workspace)"
     font.pointSize: 12
+
+    color: ColorPalette.textColor
   }
 }
 // Item{

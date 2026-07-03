@@ -1,6 +1,7 @@
 import QtQuick
-import QtQuick.Effects
+import QtQuick.Controls.impl
 import Quickshell.Services.Pipewire
+import qs.utils
 
 Item{
   id: root
@@ -13,7 +14,7 @@ Item{
 
   property var defaultAudio: Pipewire.defaultAudioSink?.audio
 
-  Image{
+  IconImage{
     id: icon 
     source: {
       const audio = root.defaultAudio
@@ -29,14 +30,9 @@ Item{
         return "../assets/volume_empty.svg"
       }
     }
-    visible: false
+
+    color: ColorPalette.imageColor
   }
 
   
-  MultiEffect {
-    anchors.fill: icon
-    source: icon
-    colorization: 1.0
-    colorizationColor: "#000000"
-  }
 }

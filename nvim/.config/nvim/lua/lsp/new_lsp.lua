@@ -3,8 +3,12 @@ local servers = {
   lua_ls = "lsp.lua.lua",
   clangd = "lsp.cpp.cpp",
   jedi_language_server = 'lsp.python.python',
-  qmlls = 'lsp.qml.qml',
   neocmake = 'lsp.cmake.cmake'
+}
+
+-- Any servers that aren't in mason
+local manual_server = {
+  qml_ls = 'lsp.qml.qml',
 }
 
 -- Retrieve mason->nvim lsp mappings
@@ -13,15 +17,6 @@ local lsp_to_package = mappings.lspconfig_to_package
 local package_to_lsp = mappings.package_to_lspconfig
 
 local registry = require('mason-registry')
-
-
--- navic for breadcrumbs
-local function base_on_attach(client, bufnr)
-  if client.server_capabilities.documentSymbolProvider then
-    local has_navic, navic = pcall(require, 'nvim-navic')
-    if has_navic then navic.attach(client, bufnr) end
-  end
-end
 
 -- get completion capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -35,7 +30,7 @@ local function ensure_lsp(server)
   local ok, pkg = pcall(registry.get_package, lsp_to_package[server])
 
   if not ok then
-    vim.notify("Error installing: " .. server, vim.log.levels.WARN)
+    vim.notify("Error installing/Not a mason package: " .. server, vim.log.levels.WARN)
     return
   end
 
@@ -48,7 +43,11 @@ end
 local function setup_and_enable_server(server, require_path)
   vim.lsp.config(server, {
     capabilities = capabilities,
-    on_attach = base_on_attach
+    on_attach = function(client, _)
+      if client.name == 'qml_ls' or client.name == 'qmlls' then
+        client.server_capabilities.semanticTokensProvider = nil
+      end
+    end
   })
 
   local has_config, config_options = pcall(require, require_path)
@@ -69,4 +68,8 @@ for _, pkg in ipairs(registry.get_installed_packages()) do
   if lsp then
     setup_and_enable_server(lsp, servers[lsp])
   end
+end
+
+for server, path in pairs(manual_server) do
+  setup_and_enable_server(server, path)
 end

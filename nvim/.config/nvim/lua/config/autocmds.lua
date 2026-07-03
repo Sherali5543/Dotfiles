@@ -57,3 +57,16 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 --     print(string.format("[%s] Event Fired: %s (Buffer: %d)", os.date("%H:%M:%S"), args.event, args.buf))
 --   end,
 -- })
+-- Create a unique execution group to prevent duplicate event loops
+local ts_group = vim.api.nvim_create_augroup("GlobalTreesitter", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = ts_group,
+  pattern = "*", -- Matches EVERY filetype detected by Neovim
+  desc = "Automatically activate Tree-sitter highlighting everywhere",
+  callback = function()
+    -- pcall safely catches errors if a parser library isn't downloaded yet
+    pcall(vim.treesitter.start)
+  end,
+})
+

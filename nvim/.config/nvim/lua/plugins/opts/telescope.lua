@@ -14,11 +14,28 @@ telescope.setup({
         ["<C-q>"] = "send_to_qflist",
       },
     },
+    vimgrep_arguments = {
+      "rg",
+      "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+      "--hidden",
+      "--glob=!**/.git/*",
+    },
     file_ignore_patterns = { "node_modules", ".git/" },
   },
   pickers = {
     find_files = {
       hidden = true,
+      find_command = {
+        "fd",
+        "--type", "f",
+        "--hidden",
+        "--exclude", ".git",
+      },
     },
   },
   extensions = {
@@ -37,4 +54,3 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = "Help Tags" })
 vim.keymap.set('n', '<leader>fo', builtin.oldfiles, { desc = "Recent Files" })
 vim.keymap.set('n', '<leader>gc', builtin.git_commits, { desc = "Git Commits" })
 vim.keymap.set('n', '<leader>gs', builtin.git_status, { desc = "Git Status" })
-

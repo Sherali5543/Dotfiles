@@ -41,14 +41,14 @@
      id="layer1"
      transform="translate(-10,-4)">
     <rect
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.978541;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.978541;stroke-dasharray:none;stroke-opacity:1"
        id="rect1"
        width="11.021459"
        height="25.02146"
        x="10.48927"
        y="6.4892707" />
     <rect
-       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.1547;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.1547;stroke-dasharray:none;stroke-opacity:1"
        id="rect3"
        width="4"
        height="2"
