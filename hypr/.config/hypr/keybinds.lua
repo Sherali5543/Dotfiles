@@ -13,7 +13,8 @@ hl.config({
     sensitivity = 0, --# -1.0 - 1.0, 0 means no modification.
 
     touchpad = {
-      natural_scroll = true
+      natural_scroll = true,
+      disable_while_typing = false
     }
   }
 })
@@ -29,6 +30,7 @@ hl.bind(MainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2
 hl.bind(MainMod .. " + E", hl.dsp.exec_cmd(Filemanager))
 hl.bind(MainMod .. " + V", hl.dsp.window.float({ action = 'toggle', window = 'activewindow' }))
 hl.bind(MainMod .. " + F", hl.dsp.window.fullscreen({ mode = 'maximized', action = 'toggle', window = 'activewindow' }))
+hl.bind(MainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = 'fullscreen', action = 'toggle', window = 'activewindow' }))
 hl.bind(MainMod .. " + P", hl.dsp.window.pseudo({ action = 'toggle', window = 'activewindow' }))
 hl.bind(MainMod .. " + CTRL + P", hl.dsp.window.pin({ wkndow = 'activewindow' }))
 hl.bind(MainMod .. " + T", hl.dsp.layout('togglesplit'))
@@ -88,8 +90,10 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tru
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
 -- # Screenshot
-hl.bind(MainMod .. " + SHIFT + P", hl.dsp.exec_cmd('grim -g "$(slurp -w 0)" ~/Pictures/shot-$(date +%s).png'))
-hl.bind(MainMod .. " + CTRL + SHIFT + P", hl.dsp.exec_cmd('grim -g "$(slurp -w 0)" - | wl-copy'))
+-- hl.bind(MainMod .. " + SHIFT + P", hl.dsp.exec_cmd('grim -g "$(slurp -w 0)" ~/Pictures/shot-$(date +%s).png'))
+-- hl.bind(MainMod .. " + CTRL + SHIFT + P", hl.dsp.exec_cmd('grim -g "$(slurp -w 0)" - | wl-copy'))
+hl.bind(MainMod .. " + SHIFT + P", hl.dsp.exec_cmd('hyprshot -m region -z -o ~/Pictures/hyprshot'))
+hl.bind(MainMod .. " + CTRL + SHIFT + P", hl.dsp.exec_cmd('hyprshot -m region -z --clipboard-only'))
 
 
 -- Requires https://github.com/Shanu-Kumawat/quickshell-overview 

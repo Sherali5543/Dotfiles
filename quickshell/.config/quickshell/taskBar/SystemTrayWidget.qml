@@ -1,131 +1,176 @@
 pragma ComponentBehavior: Bound
 
-import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
-import Quickshell.Widgets
-import Quickshell.Services.SystemTray
-import qs.utils
+import QtQuick
+import QtQuick.Controls
+import Quickshell.Io
+import "tray"
 
 Item {
   id: container
   property bool menuOpen: false
+  property var activeSocket: null
 
   // Maintain size inside the taskbar layout
   implicitWidth: button.width
   implicitHeight: button.height
 
-  Rectangle {
+  TrayButton {
     id: button
-    width: 32
-    height: 32
-    color: trayMouseArea.containsMouse ? ColorPalette.hoverColor : "transparent"
-    radius: 4
-
-    Text {
-      text: "▼" // Down arrow since the popup drops below
-      color: "white"
-      anchors.centerIn: parent
-    }
-
-    MouseArea {
-      id: trayMouseArea
-      anchors.fill: parent
-      hoverEnabled: true
-      onClicked: container.menuOpen = !container.menuOpen
+    onClicked: {
+      container.menuOpen = !container.menuOpen;
     }
   }
 
-  PopupWindow {
+  TrayPopup {
     id: trayPopup
+
+    anchorItem: button
+
     visible: container.menuOpen
+    onVisibleChanged: {
+      if (!visible)
+        container.menuOpen = false;
+    }
 
-    color: "transparent"
+    onAction: {
+      container.menuOpen = false;
+    }
 
-    implicitWidth: popupContainer.width
-    implicitHeight: popupContainer.height
+    onMenuRequested: (appId, item) => {
+      contextMenu.anchorItem = item;
+      container.getLayout(appId);
+    }
+  }
 
-    // grabFocus: true
-    // onVisibleChanged: {
-    //   if (!visible)
-    //     container.menuOpen = false;
-    // }
-    //
-    anchor.item: button
-    anchor.rect.y: button.height
-    anchor.rect.x: (button.width / 2)
-    anchor.edges: Edges.Bottom
-    anchor.gravity: Edges.Bottom
+  ContextMenu {
+    id: contextMenu
 
-    Rectangle {
-      id: popupContainer
+    anchorWindow: trayPopup
+    onWrite: body => {
+      console.log("WE ARE WRITING: ", body);
+      container.activeSocket.write(body);
+    }
+  }
 
-      width: Math.max(contentLayout.implicitWidth + (contentLayout.anchors.margins * 2), 30)
-      height: Math.max(contentLayout.implicitHeight + (contentLayout.anchors.margins * 2), 30)
+  // {
+  //    action: [GetLayout | Clicked | Closed?]
+  //    id:
+  // }
 
-      color: "#1e1e2e"
-      border.color: "#45475a"
-      border.width: 1
-      radius: 8
+  function getLayout(appId) {
+    const action = "GetLayout";
+    const payload = JSON.stringify({
+      action,
+      appId
+    }) + "\n";
+    console.log(payload);
 
-      GridLayout {
-        id: contentLayout
+    if (!activeSocket.connected) {
+      console.log("Daemon unavailable");
+      return;
+    }
+    activeSocket.write(payload);
+  }
 
-        columns: Math.min(4, repeater.count)
+  function createSocket() {
+    if (activeSocket) {
+      console.log("Destroying old socket...");
+      activeSocket.destroy();
+      activeSocket = null;
+    }
 
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.margins: 8
+    console.log("Creating new socket...");
 
-        rowSpacing: 4
-        columnSpacing: 4
+    activeSocket = socketFactory.createObject(container);
 
-        property real itemSize: 32
+    activeSocket.connected = true;
+  }
 
-        Repeater {
-          id: repeater
+  Component {
+    id: socketFactory
 
-          model: SystemTray.items
-          delegate: Rectangle {
-            id: item
+    Socket {
+      path: "/tmp/quickshell_tray.sock"
 
-            radius: 8
-            color: mouse.containsMouse ? "#33ffffff" : "transparent"
-
-            required property var modelData
-            width: contentLayout.itemSize
-            height: contentLayout.itemSize
-
-            IconImage {
-              width: 16
-              height: 16
-              anchors.centerIn: parent
-              source: item.modelData.icon
-            }
-
-            MouseArea {
-              id: mouse
-
-              hoverEnabled: true
-              anchors.fill: parent
-
-              acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-              onClicked: mouseObject => {
-                if (item.modelData.hasMenu && mouseObject.button === Qt.RightButton) {
-                  const pos = item.mapToItem(trayPopup.contentItem, 0, height);
-
-                  item.modelData.display(trayPopup, pos.x, pos.y);
-                } else {
-                  item.modelData.activate();
-                  container.menuOpen = false;
-                }
-              }
-            }
-          }
+      parser: SplitParser {
+        onRead: data => {
+          console.log("Tray backend: ", data);
+          // console.log(Object.keys(json_data));
+          // // console.log(json_data.children[0].label);
+          // // menuWindow.menuData = json_data;
+          // console.log(contextMenu.visible);
+          // console.log(contextMenu.menuData);
+          const json_data = JSON.parse(data);
+          contextMenu.showMenu(json_data);
         }
       }
+
+      onConnectedChanged: {
+        console.log("Socket connected:", connected);
+
+        if (connected) {
+          reconnectTimer.stop();
+        }
+      }
+
+      onError: {
+        console.log("Socket failed. Retrying...");
+
+        reconnectTimer.start();
+      }
     }
+  }
+
+  Timer {
+    id: reconnectTimer
+
+    interval: 250
+    repeat: false
+
+    onTriggered: {
+      if (backendDaemon.running)
+        createSocket();
+    }
+  }
+
+  Process {
+    id: backendDaemon
+
+    command: ["/home/shaheerk/.global_venv/bin/python3", Quickshell.shellDir + "/backend/system_tray.py"]
+
+    running: true
+    stdout: SplitParser {
+      // Optional: splitMarker defaults to "\n" if omitted
+      splitMarker: "\n"
+
+      // Correct signal and argument name
+      onRead: data => {
+        if (!data)
+          return;
+        console.log("Python output line:", data.trim());
+      }
+    }
+
+    stderr: SplitParser {
+      // Optional: splitMarker defaults to "\n" if omitted
+      splitMarker: "\n"
+
+      // Correct signal and argument name
+      onRead: data => {
+        if (!data)
+          return;
+        console.log("Python output line:", data.trim());
+      }
+    }
+  }
+
+  Component.onCompleted: {
+    createSocket();
+  }
+
+  Component.onDestruction: {
+    console.log("Stopping notification daemon...");
+    backendDaemon.terminate();
   }
 }

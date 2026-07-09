@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Effects
+import qs.utils
 
 ClippingRectangle {
   id: card
@@ -11,8 +12,9 @@ ClippingRectangle {
 
   height: content.implicitHeight + progressBackground.implicitHeight + 24
   border.width: 1
-  border.color: Qt.rgba(1, 1, 1, 0.08)
-  color: Qt.rgba(0.08, 0.08, 0.08, 0.9)
+  border.color: ColorPalette.borderColor
+  color: Qt.alpha(ColorPalette.backgroundColor, ColorPalette.transparency)
+  property color accent: ColorPalette.accentColor
   radius: 16
   clip: true
   layer.enabled: true
@@ -34,7 +36,7 @@ ClippingRectangle {
 
       PropertyChanges {
         target: card
-        color: Qt.rgba(0.11, 0.11, 0.11, 1)
+        color: ColorPalette.backgroundColor
       }
     }
   ]
@@ -45,7 +47,6 @@ ClippingRectangle {
     }
   }
 
-  property color accent: "#89b4fa"
   property bool expanded: false
 
   property var notification: ({})
@@ -93,9 +94,6 @@ ClippingRectangle {
   RowLayout {
     id: content
     anchors.fill: parent
-    // anchors.top: parent.top
-    // anchors.left: parent.left
-    // anchors.right: parent.right
     anchors.margins: 12
     spacing: 12
 
@@ -126,7 +124,7 @@ ClippingRectangle {
         text: card.notification?.appName || "Unknown App"
         opacity: 0.7
         font.bold: true
-        color: "#a6adc8"
+        color: ColorPalette.mutedColor
         font.pointSize: 8
         elide: Text.ElideRight
         maximumLineCount: 1
@@ -136,7 +134,7 @@ ClippingRectangle {
       Text {
         id: summary
         text: card.notification?.summary || ""
-        color: "#ffffff"
+        color: ColorPalette.textColor
         width: parent.width
         font.pointSize: 12
         font.bold: true
@@ -148,7 +146,7 @@ ClippingRectangle {
         id: body
 
         text: card.notification?.body || ""
-        color: "#cdd6f4"
+        color: ColorPalette.secondaryTextColor
         font.pointSize: 10
 
         width: parent.width

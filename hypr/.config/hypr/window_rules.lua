@@ -12,6 +12,19 @@ hl.window_rule({
 })
 
 hl.window_rule({
+  name = "steam-settings-float",
+
+  match = {
+    class = "steam",
+    title = "negative:^(Steam)$"
+  },
+
+  float = true,
+  center = true,
+  size = { 900, 900 }
+})
+
+hl.window_rule({
   name = "suppress-maximize-events",
   match = { class = ".*" },
 
@@ -40,3 +53,25 @@ hl.window_rule({
   move = { 20, "monitor_h - 120" },
   float = true,
 })
+
+-- Game rules 
+hl.window_rule({
+  name = "Battle-net-float",
+  match = {
+    class = "^(steam_app_.*)$",
+    title = "^(Battle.net)$"
+  },
+  float = true
+})
+
+hl.window_rule({
+  name = "Starcraft 2 float",
+  match = {
+    class = "^(steam_app_.*)$",
+    title = "^(StarCraft II)$"
+  },
+  float = true,
+  maximize = true,
+  focus_on_activate = true
+})
+

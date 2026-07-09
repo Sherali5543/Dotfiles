@@ -48,7 +48,18 @@ Column {
       radius: 2
 
       // color for charging / normal
-      color: batteryWidget.battery ? (batteryWidget.battery.state === UPowerDeviceState.Charging ? "#4caf50" : ColorPalette.imageColor) : "white"
+      color: {
+        if(!batteryWidget.battery)
+          return ColorPalette.imageColor
+        
+        if(batteryWidget.battery.state === UPowerDeviceState.Charging)
+          return "#4caf50"
+
+        if(PowerProfiles.profile === PowerProfile.PowerSaver)
+          return "yellow"
+
+        return ColorPalette.imageColor
+      }
     }
 
     IconImage {
